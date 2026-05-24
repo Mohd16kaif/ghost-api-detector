@@ -3,10 +3,8 @@ package com.ghostapidetector.Ghost.API.detector.discovery;
 
 import com.ghostapidetector.Ghost.API.detector.model.APIinfo;
 import com.ghostapidetector.Ghost.API.detector.registry.ApiRegistry;
-import org.apache.coyote.Request;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -26,7 +24,11 @@ public class ApiDiscovery {
         handlerMapping.getHandlerMethods()
                 .forEach((RequestMappingInfo mappingInfo, HandlerMethod handlerMethod) -> {
 
-                    String path = mappingInfo.getPathPatternsCondition()
+                    var pathPatternsCondition = mappingInfo.getPathPatternsCondition();
+                    if (pathPatternsCondition == null) {
+                        return;
+                    }
+                    String path = pathPatternsCondition
                             .getPatterns()
                             .iterator()
                             .next()
